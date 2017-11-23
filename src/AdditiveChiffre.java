@@ -1,4 +1,6 @@
 
+//test
+
 public class AdditiveChiffre {
 	static char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
