@@ -15,7 +15,7 @@ import de.danielnaber.jwordsplitter.*;
 
 public class TextAnalyse {
 	
-	static Dictionary dictionary;;
+	static Dictionary dictionary;
 
 	public static void main(String[] args) throws IOException {
 		dictionary = new Dictionary();
@@ -56,11 +56,12 @@ public class TextAnalyse {
 		//System.out.println(txt);
 		int h=0;
 		
-		int i=0; int j = 0;
-		while(i < txt.length() && j <txt.length()) {
-				//System.out.println(txt.substring(i,j));
-				if(dictionary.contains(txt.substring(i, j)) && !dictionary.contains(txt.substring(i,j+1))) {
-					System.out.println(txt.substring(i,j));
+		int i=0; int j = 1;
+		while(i < txt.length()-1 && j <txt.length()) {
+				String sub0 = txt.substring(i, j);
+				String sub1 = txt.substring(i, j+1);
+				//System.out.println(sub0 + " " +sub1);
+				if(dictionary.contains(sub0) && !dictionary.contains(sub1)) {
 					h+=(j-i)*(j-i);
 					i=j;
 					continue;

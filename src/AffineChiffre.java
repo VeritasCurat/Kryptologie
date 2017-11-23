@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Set;
 
 public class AffineChiffre {
 	
@@ -7,106 +9,63 @@ public class AffineChiffre {
 	static int[] key_de = new int[2];
 	static int restklasse = 26;;
 	
-	static char[] haeufigBuchstaben_de = "enisratdhulcgmobwfkzpvjyxq".toCharArray();
-	static char[] haeufigBuchstaben_en = "etaoinshrdlcumwfgypbvkjxqz".toCharArray();
+	private static String alphabet = "abcdefghijklmnopqrstuvwxyz";
+	static String haeufigBuchstaben_de = "enisratdhulcgmobwfkzpvjyxq";
+	static String haeufigBuchstaben_en = "etaoinshrdlcumwfgypbvkjxqz";
 
 	private static int index_alphabet(char x) {
-		for(int i=0; i<Alphabet.length; i++)if(x == Alphabet[i])return i;
+		if(alphabet.contains(Character.toString(x).toLowerCase()))
+			return alphabet.indexOf(Character.toString(x).toLowerCase());
 		return -1;
 	}
 	
-	public static int[] haeufigkeitenBuchstaben(String text) {	
-		text = text.toLowerCase();
-		for(char x: text.toCharArray()) {
-			if(!Character.isAlphabetic(x))text = text.replace(x, '\0');
+	public static String StringToHaufBuchString(String x) {
+		String ret="";
+		while(x.length() > 0) {
+			char max = findMaxChar(x);
+			ret += max;
+			x=x.replaceAll(Character.toString(max), "");
 		}
+		return ret;
+	}
 
-		int[] haeufigkeiten  = new int[26];
-		for(char x: text.toCharArray()) {
-			switch(x) {
-				case 'a': haeufigkeiten[0]++; break;
-				case 'b': haeufigkeiten[1]++; break;
-				case 'c': haeufigkeiten[2]++; break;
-				case 'd': haeufigkeiten[3]++; break;
-				case 'e': haeufigkeiten[4]++; break;
-				case 'f': haeufigkeiten[5]++; break;
-				case 'g': haeufigkeiten[6]++; break;
-				case 'h': haeufigkeiten[7]++; break;
-				case 'i': haeufigkeiten[8]++; break;
-				case 'j': haeufigkeiten[9]++; break;
-				case 'k': haeufigkeiten[10]++; break;
-				case 'l': haeufigkeiten[11]++; break;
-				case 'm': haeufigkeiten[12]++; break;
-				case 'n': haeufigkeiten[13]++; break;
-				case 'o': haeufigkeiten[14]++; break;
-				case 'p': haeufigkeiten[15]++; break;
-				case 'q': haeufigkeiten[16]++; break;
-				case 'r': haeufigkeiten[17]++; break;
-				case 's': haeufigkeiten[18]++; break;
-				case 't': haeufigkeiten[19]++; break;
-				case 'u': haeufigkeiten[20]++; break;
-				case 'v': haeufigkeiten[21]++; break;
-				case 'w': haeufigkeiten[22]++; break;
-				case 'x': haeufigkeiten[23]++; break;
-				case 'y': haeufigkeiten[24]++; break;
-				case 'z': haeufigkeiten[25]++; break;
-			}
-		}
-		return haeufigkeiten;
+	private static char findMaxChar(String str) {
+	    char[] array = str.toCharArray();
+	    int maxCount = 1;
+	    char maxChar = array[0];
+	    for(int i = 0, j = 0; i < str.length() - 1; i = j){
+	        int count = 1;
+	        while (++j < str.length() && array[i] == array[j]) {
+	            count++;
+	        }
+	        if (count > maxCount) {
+	            maxCount = count;
+	            maxChar = array[i];
+	        }
+	    }
+	    return (maxChar);
 	}
 	
-	private static double RangHaufigkeitsAnalyse(String text, String sprache) {
-		char[] hauf_text = Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(text));
-			int anz_buch_hauf_text = 0; for(char x: hauf_text)if(x!='\0')anz_buch_hauf_text++;
-		int anz_richtige=0;
-		for(int i=0; i<anz_buch_hauf_text; i++) {
-			if(sprache.contains("en")) {
-				if(hauf_text[i] == haeufigBuchstaben_en[i])anz_richtige++;
-			}
-			else if(sprache.contains("de")) {
-				if(hauf_text[i] == haeufigBuchstaben_de[i])anz_richtige++;
-			}
-		}
-		System.out.println(anz_richtige);
-		return (double) (anz_richtige/anz_buch_hauf_text);
+	public static int ggT(int a, int b) {
+		if(a== 0 || a == b)return a;
+		else if(a < b)return ggT(a, b-a);
+		else return ggT(a-b, b);
 	}
-	
-	public static char[] Buchstabenhaeufigkeiten_rang(int[] haeufigkeitenBuchstaben) {
-		char[] haeufigkeiten = new char[26];
-		int max_index=0;
-		int max_value=0;
-		int nr=0;
-		for(int j=0; j<26; j++) { //get all 26 haeufigkeiten
-			max_value = 0;
-			max_index = -1;
-			for(int i=0; i<26; i++) { //find max of haeufigkeitenBuchstaben
-				if(haeufigkeitenBuchstaben[i]>max_value) {
-					max_value=haeufigkeitenBuchstaben[i];
-					max_index = i;
-				}
-			}
-			if(max_index < 0)haeufigkeiten[nr] = '\0';
-			else {
-				haeufigkeiten[nr] = Alphabet[max_index];
-				haeufigkeitenBuchstaben[max_index] = Integer.MIN_VALUE;
-				nr++;
-			}
-		}
-		return haeufigkeiten;
-	}
-	
-	private static final char[] Alphabet = {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
-
 
 	private static int kongruenzgleichung(int a, int m, int b) {
-		for(int i=0;;i++) {
-			if(a*i % m == b)return i;
+		if(a==b)return 1;
+		if(a != 0 && ggT(a,m) % b == 0 ) { //lösbar
+			for(int i=0;i<a;i++) {
+				if(a*i % m == b)return i;
+			}
 		}
+		else {System.err.println("kongruenzgleichung nicht lösbar: "+a+"*x ="+ b+ "%"+m);System.exit(-1);}
+		return -1;
 	}
 	
 	public AffineChiffre(int q, int k, int modul){
 		key_en[0] = q;
-		key_de[1] = k;
+		key_en[1] = k;
 		berechneDechiffrierungKey();
 		restklasse = modul;
 	}
@@ -118,71 +77,66 @@ public class AffineChiffre {
 	}
 	
 	private static void test(){
-		String klartext = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		setzeEnchiffrierungKey(9, 2);
-		System.out.println(dechifrieren(enchifrieren(klartext)));
+		AffineChiffre ac = new AffineChiffre(3, 2, 26);
+		System.out.println(ac.breche_affineChiffre("laoeaehoaphwvaeixobgjcbhothloblokheixopevbcixockixqoppoboapomohqceuogkopehojhkpleappjseobeixoapopmcu", "de"));
 	}
 	
-	public static void setzeEnchiffrierungKey(int q, int k){
+	public void setzeEnchiffrierungKey(int q, int k){
 		key_en[0]=q; key_en[1]=k;
 		berechneDechiffrierungKey();
 			//System.out.println(key_de[0]+ " "+ key_de[1]);
 	}
 	
-	public static void berechneDechiffrierungKey(){
+	public void berechneDechiffrierungKey(){
 		key_de[0] = Restklassenrechner.inverses(key_en[0], restklasse);
 		key_de[1] = key_en[1];
 	}
 	
-	public static String enchifrieren(String eingabe){
+	public String enchifrieren(String eingabe){
 		String ausgabe = new String();
 		for(int i=0; i<eingabe.length(); i++){
 			//suche Position im Alphabet
-			int pos;
-			for(pos=0; pos<26; pos++){
-				if(eingabe.charAt(i) == Alphabet[pos])break;
-			}
-			pos = (pos*key_en[0] + key_en[1]) % restklasse;
-			ausgabe += Alphabet[pos];
+			int pos = index_alphabet(eingabe.charAt(i));
+			pos = ((pos*key_en[0] + key_en[1])+restklasse)% restklasse;
+			ausgabe += alphabet.toCharArray()[pos];
 		}
 		return ausgabe;
 	}
 	
-	public static String dechifrieren(String eingabe){
+	public  String dechifrieren(String eingabe){
 		String ausgabe = new String();
 		for(int i=0; i<eingabe.length(); i++){
-			//suche Position im Alphabet
-			int pos;
-			for(pos=0; pos<26; pos++){
-				if(eingabe.charAt(i) == Alphabet[pos])break;
-			}
-				//System.out.print(pos + "<= "+ key_de[0]+ "*( "+ pos + "- " + key_de[1]+")) % "+restklasse);
+			int pos = alphabet.indexOf(eingabe.charAt(i));
 			pos = (key_de[0]*(pos - key_de[1])) % restklasse;
 			while(pos < 0)pos+=restklasse;
-			ausgabe += Alphabet[pos];
-				//System.out.println("= "+pos +" / "+ ausgabe.charAt(i));
+			ausgabe += alphabet.toCharArray()[pos];
 		}
 		return ausgabe;
 	}
 	
-	public static String affineChiffre_brechen(String kryptotext, String sprache) {
+	//TODO: vervollstaendigen
+	public static String breche_affineChiffre(String kryptotext, String sprache) {
 		int b=0;
 		int c=0;
+		String haufBuchString = StringToHaufBuchString(kryptotext);
+			//System.out.println(haufBuchString);
 		if(sprache.contains("en")) {
-			int abst_1_2_alp = Math.abs(index_alphabet(haeufigBuchstaben_en[0]) - index_alphabet(haeufigBuchstaben_en[1]));
-			int abst_1_2_txt = Math.abs(Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[0] - Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[1]); 
+			int abst_1_2_alp = Math.abs(index_alphabet(haeufigBuchstaben_en.toCharArray()[0]) - index_alphabet(haeufigBuchstaben_en.toCharArray()[1]));
+			int abst_1_2_txt = Math.abs(index_alphabet(haufBuchString.charAt(0)) - index_alphabet(haufBuchString.charAt(1))); 
 			b = kongruenzgleichung(abst_1_2_alp, 26, abst_1_2_txt);
-			c = Math.abs(index_alphabet(Alphabet[b*index_alphabet(haeufigBuchstaben_en[0])]) - Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[0]);
+			c = Math.abs(alphabet.charAt(b*index_alphabet(haeufigBuchstaben_en.toCharArray()[0])%26) - alphabet.indexOf(haufBuchString.charAt(0)));
 		}
 		if(sprache.contains("de")) {
-			int abst_1_2_alp = Math.abs(index_alphabet(haeufigBuchstaben_de[0]) - index_alphabet(haeufigBuchstaben_de[1]));
-			int abst_1_2_txt = Math.abs(Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[0] - Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[1]); 
+			int abst_1_2_alp = Math.abs(index_alphabet(haeufigBuchstaben_de.toCharArray()[1]) - index_alphabet(haeufigBuchstaben_de.toCharArray()[0]));
+			int abst_1_2_txt = Math.abs(index_alphabet(haufBuchString.charAt(1)) - index_alphabet(haufBuchString.charAt(0))); 
 			b = kongruenzgleichung(abst_1_2_alp, 26, abst_1_2_txt);
-			c = Math.abs(index_alphabet(Alphabet[b*index_alphabet(haeufigBuchstaben_en[0])]) - Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[0]);
+			
+			int trans_char = (b*index_alphabet(haeufigBuchstaben_de.toCharArray()[1]))%26;
+			c = alphabet.indexOf(haufBuchString.charAt(0)) - (trans_char);
 		}
+			//System.out.println(b+" "+c);
 		AffineChiffre af = new AffineChiffre(b, c, 26);
-		System.out.println(af.dechifrieren(kryptotext));
-		return "";
+			//System.out.println(af.key_de[0]+" "+af.key_de[1]);
+		return af.dechifrieren(kryptotext);
 	}
-
 }

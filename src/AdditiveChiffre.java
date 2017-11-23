@@ -3,8 +3,8 @@ import java.io.IOException;
 public class AdditiveChiffre {
 	static char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
-	public static void main(String[] args) {
-		zeigeAlleAdditionen("BEEAKFYDJXUQYHYJIQRYHTYJIQFBQDUYJIIKFUHCQD".toLowerCase());
+	public static void main(String[] args) throws IOException {
+		System.out.println(breche_additiveChiffre("BEEAKFYDJXUQYHYJIQRYHTYJIQFBQDUYJIIKFUHCQD".toLowerCase(),"en"));
 	}
 	
 	static char[] haeufigBuchstaben_de = "enisratdhulcgmobwfkzpvjyxq".toCharArray();
@@ -131,30 +131,38 @@ public class AdditiveChiffre {
 	
 	
 	
-	public static String additiveChiffre(String kryptotext, String sprache) throws IOException {
-		System.out.println("krypto: "+kryptotext);
+	public static String breche_additiveChiffre(String kryptotext, String sprache) throws IOException {
+		//System.out.println("krypto: "+kryptotext);
 		int max_value=0; int max_index=0;
-		if(kryptotext.length() < 200) {
+		
+		//hier gilt die Verteilungsannahme wahrscheinlich nicht -> gesamten loesungsraum durchsuchen
+		if(kryptotext.length() < 100) {
+			TextAnalyse.dictionary = new Dictionary();
 			String klartext="";
-			for(int i=0; i<26; i++){
+			for(int i=1; i<26; i++){ //berechne alle Additionen der Texte
 				for(int l=0; l<kryptotext.length(); l++){
 					klartext += AdditiveChiffre.addition(kryptotext.charAt(l), i);
 				}
+				
 				int d = TextAnalyse.textTest_en(klartext);
-					System.out.println(klartext + " " +d);
 				if(d > max_value) {
 					max_value = d;
 					max_index = i;
 				}
+				//System.out.println(klartext + " " + d + "MAX: "+max_index);
 				klartext="";
+
 			}
 			klartext = "";
+			
 			for(int l=0; l<kryptotext.length(); l++){
-				klartext += AdditiveChiffre.addition(kryptotext.charAt(l), max_value);
+				klartext += AdditiveChiffre.addition(kryptotext.charAt(l), max_index);
 			}
-			System.out.println(klartext + " " +max_value);
+			return klartext;
 		}
-		if(kryptotext.length() >= 200) {//hier gilt die Verteilungsannahme
+		
+		
+		if(kryptotext.length() >= 100) {
 			//finde den schlüssel
 			char hauf_kry = Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[0];
 			char hauf_eng = haeufigBuchstaben_en[0];
