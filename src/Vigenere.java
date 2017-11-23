@@ -1,8 +1,17 @@
 import java.util.ArrayList;
 
 public class Vigenere {
+	
+	static char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
+
+	
 	//hilfsfunktionen
+		private static int index_alphabet(char x) {
+			for(int i=0; i<alphabet.length; i++)if(x == alphabet[i])return i;
+			return -1;
+		}
+	
 		public static int ggT(int a, int b) {
 			if(a == b)return a;
 			else if(a < b)return ggT(a, b-a);
@@ -29,15 +38,30 @@ public class Vigenere {
 		
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		System.out.println(entschluesseln("RQKAVINM", "wie"));
 	}
 	
 	public static String entschluesseln(String kryptotext, String schluessel) {
-		return "";
+		kryptotext = kryptotext.toLowerCase();
+		String ret = "";
+		for(int i=0; i<kryptotext.length(); i++) {
+			int pos_k = index_alphabet(kryptotext.charAt(i));
+			int pos_s = index_alphabet(schluessel.charAt(i%schluessel.length()));
+			ret += alphabet[((pos_k-pos_s)+26) % 26];
+		}
+		return ret;
 	}
 	
+	
 	public static String verschluesseln(String klartext, String schluessel) {
-		return "";
+		klartext = klartext.toLowerCase();
+		String ret = "";
+		for(int i=0; i<klartext.length(); i++) {
+			int pos_k = index_alphabet(klartext.charAt(i));
+			int pos_s = index_alphabet(schluessel.charAt(i%schluessel.length()));
+			ret += alphabet[((pos_k-pos_s)+26) % 26];
+		}
+		return ret;
 	}
 	
 	public static String vigenere_brechen(String kryptotext) {
