@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Blockchiffre {
 
@@ -7,8 +8,8 @@ public class Blockchiffre {
 	static char[] haeufigBuchstaben_de = "enisratdhulcgmobwfkzpvjyxq".toCharArray();
 	static char[] haeufigBuchstaben_en = "etaoinshrdlcumwfgypbvkjxqz".toCharArray();
 
-	static String[] haeuf_Bi_de_top20 = {"ER", "EN" ,"CH" ,"DE", "EI", "ND", "TE" ,"IN", "IE", "GE", "ES", "NE", "UN", "ST", "RE", "HE", "AN", "BE", "SE", "NG", "DI", "SC"};
-	static String[] haeuf_Bi_en_top20= {"TH", "HE", "AN","IN",  "ER",  "RE" , "ON" , "ES", "TI",  "AT", "ST", "EN", "OR", "ND", "TO", "NT", "ED", "IS", "AR", "OU", "OF", "TE"};
+	static String[] haeuf_Bi_de_top20 = {"er", "en" ,"ch" ,"de", "ei", "nd", "te" ,"in", "ie", "ge", "es", "ne", "un", "st", "re", "he", "an", "be", "se", "ng", "di", "sc"};
+	static String[] haeuf_Bi_en_top20= {"th", "he", "an","in",  "er",  "re" , "on" , "es", "ti",  "ar", "st", "en", "or", "nd", "to", "nt", "ed", "is", "ar", "ou", "of", "te"};
 	
 	private static int index_alphabet(char x) {
 		for(int i=0; i<alphabet.length; i++)if(x == alphabet[i])return i;
@@ -16,7 +17,7 @@ public class Blockchiffre {
 	}
 	
 	private static boolean contains(String suche, String[] arr) {
-		for(String x: arr)if(x == suche)return true;
+		for(String x: arr)if(x.equals(suche))return true;
 		return false;
 	}
 	
@@ -54,8 +55,38 @@ public class Blockchiffre {
 		}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+//		int[] k_de =  {3,0,2,4,1};
+//		int[] k_en =  {1,4,2,0,3};
+//		System.out.println(enchiffrieren("HIERHABENWIREINENKURZENKLARTEXTVORLIEGEN",k_en));
+//		System.out.println(dechiffrieren("IHEHRBWEANRNEIINRKEUELNZKRXTAEVLOTRENGIE", k_de));
+		
+		String krypto = "IHEHR BWEAN RNEII NRKEU ELNZK RXTAE VLOTR ENGIE";
+		System.out.println(blockchiffre_bigramme(krypto, 5, "de"));
 
+	}
+	
+	public static void test() {
+		
+	}
+	
+	public static String dechiffrieren(String kryptotext, int[] permutation) {
+		String ret="";
+		int k =0;
+		for(int i=0; i<kryptotext.length(); i++) {
+			k = ((int) i / permutation.length)*permutation.length + permutation[(i % permutation.length)];
+			ret += Character.toString(kryptotext.charAt(k));
+		}
+		return ret;
+	}
+	
+	public static String enchiffrieren(String klartext, int[] permutation) {
+		String ret="";
+		int k =0;
+		for(int i=0; i<klartext.length(); i++) {
+			k = ((int) i / permutation.length)*permutation.length + permutation[(i % permutation.length)];
+			ret += Character.toString(klartext.charAt(k));
+		}
+		return ret;
 	}
 	
 	public static void blockchiffre_allePermutationen(String kryptotext, int blocklaenge) throws IOException {
@@ -93,7 +124,7 @@ public class Blockchiffre {
 	}
 	
 	public static String blockchiffre_bigramme(String kryptotext, int blocklaenge, String sprache) {
-		kryptotext = kryptotext.toUpperCase();
+		kryptotext = kryptotext.toLowerCase();
 		ArrayList<Integer> schluessel = new ArrayList<Integer>(); schluessel.add(0);
 		ArrayList<Integer> kandidaten = new ArrayList<Integer>(); for(int i=1; i<blocklaenge; i++)kandidaten.add(i);
 
@@ -107,9 +138,13 @@ public class Blockchiffre {
 				}
 			}
 		//schluessel bestimmen - fange mit spalte 1 an
-			while(schluessel.size() < blocklaenge) {
+			while(kandidaten.size() > 0) {
 				//trenne schluessel(spalten) - kandidaten(spalten) - muessen disjunkt sein 
-				for(int i: schluessel)kandidaten.remove(schluessel.get(i));
+				Collection<Integer> sl = schluessel;
+				kandidaten.removeAll(sl);
+				//System.out.println(schluessel); System.out.println(kandidaten);
+
+				//for(int i: schluessel)if(kandidaten.contains(schluessel.get(i)))kandidaten.remove(schluessel.get(i));
 				
 				//bestimme eine vorgaenger oder nachfolgerspalte
 				int anz_bi_gramme=0;
@@ -124,17 +159,24 @@ public class Blockchiffre {
 						kandidat_index[0] = schluessel.get(schluessel.size()-1); kandidat_index[1] = kandidaten.get(i);
 						for(int j=0; j<bloecke.length; j++) {
 							kandidat_value = "";
-							kandidat_value += bloecke[j].substring(kandidat_index[0], kandidat_index[0]+1) + bloecke[j].substring(kandidat_index[1], kandidat_index[1]+1); 
-							System.out.println(kandidat_value+" "+contains(kandidat_value, haeuf_Bi_de_top20));
-
-							if(sprache.contains("de") && contains(kandidat_value, haeuf_Bi_de_top20))anz_bi_gramme++;
-							if(sprache.contains("en") && contains(kandidat_value, haeuf_Bi_en_top20))anz_bi_gramme++;	
+							kandidat_value += Character.toString(bloecke[j].charAt(kandidat_index[0]))  + Character.toString(bloecke[j].charAt(kandidat_index[1])); 
+							//System.out.println(kandidat_value+" "+contains(kandidat_value, haeuf_Bi_de_top20));
+							if(sprache.contains("de") && contains(kandidat_value, haeuf_Bi_de_top20)) {
+								anz_bi_gramme++;
+								//System.out.println(kandidat_index[0]+" "+kandidat_index[1]+" "+kandidat_value);
+							}
+							if(sprache.contains("en") && contains(kandidat_value, haeuf_Bi_en_top20)) {
+								anz_bi_gramme++;
+								//System.out.println(kandidat_index[0]+" "+kandidat_index[1]+" "+kandidat_value);
+							}
 						}
 						if(anz_bi_gramme > anz_bi_gramme_max) {
+							//System.out.println(kandidat_index[0]+" "+kandidat_index[1]);
 							anz_bi_gramme_max = anz_bi_gramme;
-							kandidat_index_max = kandidat_index;
+							kandidat_index_max = kandidat_index.clone();
 						}
 					}
+					
 					//bigramme der form kandidaten[i]schluessel[1]
 					for(int i=0; i<kandidaten.size(); i++) {
 						anz_bi_gramme = 0; 
@@ -144,11 +186,11 @@ public class Blockchiffre {
 							kandidat_value += Character.toString(bloecke[j].charAt(kandidat_index[0])) + Character.toString(bloecke[j].charAt(kandidat_index[1]));
 							if(sprache.contains("de") && contains(kandidat_value, haeuf_Bi_de_top20)) {
 								anz_bi_gramme++;
-								System.out.println(kandidat_value);
+								//System.out.println(kandidat_index[0]+" "+kandidat_index[1]+" "+kandidat_value);
 							}
 							if(sprache.contains("en") && contains(kandidat_value, haeuf_Bi_en_top20)) {
 								anz_bi_gramme++;	
-								System.out.println(kandidat_value);
+								//System.out.println(kandidat_index[0]+" "+kandidat_index[1]+" "+kandidat_value);
 							}
 						}
 						if(anz_bi_gramme > anz_bi_gramme_max) {
@@ -156,25 +198,24 @@ public class Blockchiffre {
 							kandidat_index_max = kandidat_index;
 						}
 					}
-					System.out.println(kandidat_index_max[0] + " "+kandidat_index_max[1]);
-					
+					//System.out.println(kandidat_index_max[0]+" "+kandidat_index_max[1]+"\n");
+
 				//kandidatenspalte abziehen und zum schluessel hinzufuegen
-				if(kandidat_index_max[1] == schluessel.get(0)) {
+					//kandidat hinten anfuegen
+						if(kandidat_index_max[0] == schluessel.get(schluessel.size()-1)) {
+							schluessel.add(kandidat_index_max[1]);
+						}
 					//kandidat vorne anfuegen
-					for(int i=1; i<schluessel.size();i++)schluessel.set(i, schluessel.get(i+1));
-					schluessel.set(0, kandidat_index_max[1]);
-				}
-				if(kandidat_index_max[0] == schluessel.get(schluessel.size())) {
-					schluessel.add(kandidat_index_max[1]);
-				}
+						if(kandidat_index_max[1] == schluessel.get(0)) {
+							schluessel.add(schluessel.get(schluessel.size()-1));
+							for(int i=schluessel.size()-1; i>0;i--)schluessel.set(i, schluessel.get(i-1));
+							schluessel.set(0, kandidat_index_max[0]);
+						}
 			}
-		String rueckgabe="";
+		//klartext mit schluessel berechnen
+		int[] schluessel_arr = new int[schluessel.size()]; for(int i: schluessel)schluessel_arr[i] = schluessel.get(i);
 		kryptotext = kryptotext.replace(" ", "");
-		for(int i=0; i<bloecke.length; i++) {
-			rueckgabe +=  Character.toString(kryptotext.charAt(i/bloecke.length + schluessel.get(i%bloecke.length)));
-		}
-		
-		return rueckgabe;	
+		return dechiffrieren(kryptotext, schluessel_arr);	
 	}
 
 }
