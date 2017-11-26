@@ -38,7 +38,7 @@ public class Vigenere {
 		
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println(entschluesseln("RQKAVINM", "wie"));
+		System.out.println(entschluesseln("STEFFENFREUND", "FCK"));
 	}
 	
 	public static String entschluesseln(String kryptotext, String schluessel) {
