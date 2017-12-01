@@ -7,63 +7,67 @@ public class S_BOX {
 	public static void main(String[] args) {
 		//A=10, B=11, C=12, D=13, E=14, F=15
 		//fill HS
-		s_value.put(0, 14);
-		s_value.put(1, 4);
-		s_value.put(2, 13);
-		s_value.put(3, 1);
 		
-		s_value.put(4, 2);
-		s_value.put(5, 15);
-		s_value.put(6, 11);
-		s_value.put(7, 8);
-		
-		s_value.put(8, 3);
-		s_value.put(9, 10);	
-		s_value.put(10, 6);
-		s_value.put(11, 12);
-		
-		s_value.put(12, 5);
-		s_value.put(13, 9);
-		s_value.put(14,0);
-		s_value.put(15, 7);
-		
-//			s_value.put(0, 8);
+		//S-Box aus Vorlesung:
+//			s_value.put(0, 14);
 //			s_value.put(1, 4);
-//			s_value.put(2, 2);
+//			s_value.put(2, 13);
 //			s_value.put(3, 1);
 //			
-//			s_value.put(4, 12);
-//			s_value.put(5, 6);
-//			s_value.put(6, 3);
-//			s_value.put(7, 13);
+//			s_value.put(4, 2);
+//			s_value.put(5, 15);
+//			s_value.put(6, 11);
+//			s_value.put(7, 8);
 //			
-//			s_value.put(8, 10);
-//			s_value.put(9, 5);	
-//			s_value.put(10, 14);
-//			s_value.put(11, 7);
+//			s_value.put(8, 3);
+//			s_value.put(9, 10);	
+//			s_value.put(10, 6);
+//			s_value.put(11, 12);
 //			
-//			s_value.put(12, 15);
-//			s_value.put(13, 11);
-//			s_value.put(14, 9);
-//			s_value.put(15, 0);
+//			s_value.put(12, 5);
+//			s_value.put(13, 9);
+//			s_value.put(14,0);
+//			s_value.put(15, 7);
+		
+		//für Aufgabe 33a entkommentieren 
+		
+			s_value.put(0, 8);
+			s_value.put(1, 4);
+			s_value.put(2, 2);
+			s_value.put(3, 1);
+			
+			s_value.put(4, 12);
+			s_value.put(5, 6);
+			s_value.put(6, 3);
+			s_value.put(7, 13);
+			
+			s_value.put(8, 10);
+			s_value.put(9, 5);	
+			s_value.put(10, 14);
+			s_value.put(11, 7);
+			
+			s_value.put(12, 15);
+			s_value.put(13, 11);
+			s_value.put(14, 9);
+			s_value.put(15, 0);
 		
 		
 		
-			System.out.println("(3,9): "+get_L_a_b(2, 9, 4));
+			//System.out.println("(3,9): "+get_L_a_b(2, 9, 4));
 			printLAB_field(get_all_L_a_b_combination(4));
 	}
 	
 	
 	private static void printLAB_field(int[][] L_a_b) {
 		int length = L_a_b.length;
-		System.out.print("   ");
+		System.out.print("a|b ");
 		for(int i=0; i<L_a_b.length;i++)System.out.print(i+"  ");
 		System.out.println();
 		for(int zeile=0; zeile<length; zeile++) {
 			for(int spalte=0; spalte<length; spalte++) {
 				//System.out.println(spalte);
 				if(spalte == 0) {
-					System.out.print(zeile+ " ");
+					System.out.print(zeile+ "  ");
 					if(zeile < 10 )System.out.print(" ");
 					System.out.print(L_a_b[zeile][spalte]);
 					if(L_a_b[zeile][spalte]<10)System.out.print(" ");
