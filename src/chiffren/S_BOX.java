@@ -1,3 +1,4 @@
+package chiffren;
 import java.util.HashMap;
 
 public class S_BOX {
