@@ -7,9 +7,6 @@ import java.util.List;
 
 import javax.print.attribute.Size2DSyntax;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import de.danielnaber.jwordsplitter.*;
 
 
