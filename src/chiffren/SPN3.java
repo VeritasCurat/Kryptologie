@@ -1,19 +1,19 @@
 /* Urheber: grobelsj, 565530
  * 			kleinede, 564838
  */
-
+package chiffren;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import javax.sound.midi.Synthesizer;
-import javax.xml.bind.SchemaOutputResolver;
-
-public class SPN2
+public class SPN3
 {
     public static void main(String[] args) {
-        //testus();
-    	//test();
-		System.out.println("Mittel: "+search_T(100,10));
+    	test();
+		//System.out.println("Mittel: "+search_T(100,10));
+
+//    	int[] maxkey = differentialattack(paare(20000, 4));
+//    	System.out.println(maxkey[0]+" "+maxkey[1]);
+    	search_T(10000, 1);
 
     }
 
@@ -21,10 +21,12 @@ public class SPN2
 
 
 //    	//roundkey
-//	    	int[] key = {3,10,9,4,13,6,3,15};
-//	    	for(int[] x: round_key(key, 5, 4)) {
-//	    		for(int y: x)System.out.println(y);
-//	    	}
+	    	int[] key = {3,10,9,4,13,6,3,15};
+	    	for(int[] x: round_key(key, 5, 4)) {
+	    		for(int y: x)System.out.print(y+" ");
+	    		System.out.println();
+	    	}
+	    	
 //	    //XOR
 //	    	int[] x = {1,2,3};
 //	    	int[] y = {0,1,2};
@@ -64,6 +66,125 @@ public class SPN2
      * sucht nach T (durchschnittliches t) bei anz_durchlauefem. Erweitert anzahl 
      * 
      */
+//	public static int search_T(int inkrement_paare, int anz_durchlauefe) {
+//		int summe_last_c_t = 0;
+//		int last_c_t = 0;
+//		for(int durchlauf=1; durchlauf<=anz_durchlauefe; durchlauf++) {
+//			long timeStart=System.nanoTime();
+//			long timeEnd;
+//			int lastt = 0;
+//			int t = 1;
+//			int alpha[][] = new int[16][16];
+//			int[][][] paare = null;
+//			int laengsteSeq_13_3=0;
+//			while(true) {
+//				paare = newpaare(paare, t - lastt, 4, lastt);
+//				alpha = differentialattack(paare, alpha, lastt);
+//				//System.out.println(t+": "+beta[i][0]+" "+beta[i][1]);
+//				lastt = t;
+//				t += inkrement_paare;
+//				timeEnd = System.nanoTime();
+//				System.out.println("Verlaufszeit: " + ((timeEnd - timeStart) / 1000000000.0) + " sek.");
+//				//maxkey
+//				int[][] beta = new int[16][16];
+//				int max =-1;
+//				int[] maxkey = new int[2];
+//				for(int l1=0; l1<16; l1++) {
+//					for(int l2=0; l2<16; l2++) {
+//						beta[l1][l2] = Math.abs(alpha[l1][l2] - t/2);
+//						if(beta[l1][l2] > max) {
+//							max = beta[l1][l2];
+//							maxkey[0]=l1; maxkey[1]=l2;
+//						}
+//					}
+//				}
+//				System.out.println("maxkey: "+maxkey[0]+" "+maxkey[1]);
+//				System.out.println("t: "+t);
+//				if(maxkey[0] == 13 && maxkey[1] == 3) {last_c_t = t;laengsteSeq_13_3++;}
+//				else {laengsteSeq_13_3=0;last_c_t=-1;};
+//				//annahme: wenn [13,3] 20-mal nacheinander ausgegeben wird(
+//				if(laengsteSeq_13_3>=20)break;
+//			}
+//			summe_last_c_t += last_c_t;
+//			System.out.println("aktuellerDurchschnitt"+summe_last_c_t/durchlauf);
+//			timeEnd = System.nanoTime();
+//			System.out.println("Endzeit: " + ((timeEnd - timeStart) / 1000000000.0) + " sek.");
+//		}
+//		return summe_last_c_t/anz_durchlauefe;
+//	}
+
+    /**
+     * wandelt integerarray mit dezimalzahlen in Sequenz von binaerzahlen dargestellt als String um
+     * @param x
+     * @return
+     */
+	public static String toBinString(int[] x) {
+		String x_bin = "";
+		for(int i: x) {
+			String block_bin = String.valueOf(Integer.toBinaryString(i));
+			while(block_bin.length()<4) block_bin = "0" + block_bin;
+			x_bin+=block_bin;
+		}
+		return x_bin;
+	}
+
+    /**
+     * linearattack mit folgender Modifikation: alpha wird nur durch neue Paare modifiziert und zuerueckgegeben
+     * @param paare
+     * @param t
+     * @param alpha
+     * @param startpos
+     * @return alpha
+     */
+	public static int[][] differentialattack(int[][][] paare, int[][] gamma,int startpos) {
+		int[] S_ = {6,2,1,3,9,10,7,14,12,5,11,15,13,4,0,8};		
+		for(int q1=startpos; q1<paare.length;q1++) {
+				//if(q1%10000 == 0)System.out.println(q1);
+			for(int q2=startpos; q2<paare.length;q2++) {
+				int[] y1 = paare[q1][1];
+				int[] y2 = paare[q2][1];
+				if(y1[2] == y2[2] && y1[3] == y2[3]) { 
+					for(int l1=0; l1<16; l1++) {
+						for(int l2=0; l2<16; l2++) {		
+							int v1_4_1 = l1 ^ y1[0];
+							int v1_4_2 = l2 ^ y1[1];
+							int v2_4_1 = l1 ^ y2[0];
+							int v2_4_2 = l2 ^ y2[1];
+								//System.out.println(v1_4_1+" "+v1_4_2+" "+v2_4_1+" "+v2_4_2);
+							int u1_4_1 = substitution(S_, v1_4_1);
+							int u1_4_2 = substitution(S_, v1_4_2);
+							int u2_4_1 = substitution(S_, v2_4_1);
+							int u2_4_2 = substitution(S_, v2_4_2);
+								//System.out.println(u1_4_1+" "+u1_4_2+" "+u2_4_1+" "+u2_4_2);
+							int w1 = u1_4_1 ^ u2_4_1;
+							int w2 = u1_4_2 ^ u2_4_2;
+								//System.out.println(w1+" "+w2);
+							if(w1 == 1 && w2 == 1)gamma[l1][l2]++;
+						}
+					}
+				}
+				
+			}
+		}
+		return gamma;
+//		int max =-1;
+//		int[] maxkey=new int[2];
+//		for(int l1=0; l1<16; l1++) {
+//			for(int l2=0; l2<16; l2++) {	
+//				//System.out.print(gamma[l1][l2]+" ");
+//				if(gamma[l1][l2] > max) {maxkey[0]=l1; maxkey[1]=l2; max=gamma[l1][l2];}
+//			}
+//			//System.out.println();
+//		}
+//		//if(maxkey[0] == 13 && maxkey[1] == 3)System.out.println("[13][3]"+beta[13][3]+" maxkey:"+beta[maxkey[0]][maxkey[1]]);
+//		return maxkey;
+	}
+	
+
+    /**
+     * sucht nach T (durchschnittliches t) bei anz_durchlauefem. Erweitert anzahl 
+     * 
+     */
 	public static int search_T(int inkrement_paare, int anz_durchlauefe) {
 		int summe_last_c_t = 0;
 		int last_c_t = 0;
@@ -77,7 +198,7 @@ public class SPN2
 			int laengsteSeq_13_3=0;
 			while(true) {
 				paare = newpaare(paare, t - lastt, 4, lastt);
-				alpha = linearattack_mod(paare, t, alpha, lastt);
+				alpha = differentialattack(paare, alpha, lastt);
 				//System.out.println(t+": "+beta[i][0]+" "+beta[i][1]);
 				lastt = t;
 				t += inkrement_paare;
@@ -98,7 +219,7 @@ public class SPN2
 				}
 				System.out.println("maxkey: "+maxkey[0]+" "+maxkey[1]);
 				System.out.println("t: "+t);
-				if(maxkey[0] == 13 && maxkey[1] == 3) {last_c_t = t;laengsteSeq_13_3++;}
+				if(maxkey[0] == 13 && maxkey[1] == 6) {last_c_t = t;laengsteSeq_13_3++;}
 				else {laengsteSeq_13_3=0;last_c_t=-1;};
 				//annahme: wenn [13,3] 20-mal nacheinander ausgegeben wird(
 				if(laengsteSeq_13_3>=20)break;
@@ -110,249 +231,50 @@ public class SPN2
 		}
 		return summe_last_c_t/anz_durchlauefe;
 	}
-	
 
-	/**
-	 * sucht t mithilfe von binaersuche
-	 * @return
-	 */
-    public static int search_t() {
-    	int t = 3001;
-    	int untere_grenze = 1000;
-    	int obere_grenze = t;
-    	int key1 = 13; int key3 = 3;
-    	//finde obere grenze
-    	while(true) {
-    		int[] a = linearattack(paare(t, 4), t);
-    		if(a[0] == key1 && a[1] == key3)break;
-    		else t*=1.5;
-    	}
-    	System.out.println(t);
-    	while(obere_grenze != untere_grenze) {
-    		int[] a = linearattack(paare(obere_grenze, 4), obere_grenze);
-    		if(a[0] == key1 && a[1] == key3);
-    	}
-    	return 0;
-    }
-
-
-    /**
-     * wandelt integerarray mit dezimalzahlen in Sequenz von binaerzahlen dargestellt als String um
-     * @param x
-     * @return
-     */
-	public static String toBinString(int[] x) {
-		String x_bin = "";
-		for(int i: x) {
-			String block_bin = String.valueOf(Integer.toBinaryString(i));
-			while(block_bin.length()<4) block_bin = "0" + block_bin;
-			x_bin+=block_bin;
-		}
-		return x_bin;
-	}
-    
-
-	/**
-	 * linearattack mit S^-1 aus Vorlesung
-	 * @param paare
-	 * @param t
-	 * @return
-	 */
-    public static int[] linearattack_v(int[][][] paare, int t) {
-		int[][] alpha = new int[16][16];
-		int[][] beta = new int[16][16];
+	public static int[] differentialattack_v(int[][][] paare) {
+		int[][] gamma = new int[16][16];
 		int[] S_ = {14,3,4,8,1,12,10,15,7,13,9,6,11,2,0,5};
+		for(int q1=0; q1<paare.length;q1++) {
+				//if(q1%10000 == 0)System.out.println(q1);
+			for(int q2=0; q2<paare.length;q2++) {
+				int[] y1 = paare[q1][1];
+				int[] y2 = paare[q2][1];
+				if(y1[0] == y2[0] && y1[2] == y2[2]) { 
+					for(int l1=0; l1<16; l1++) {
+						for(int l2=0; l2<16; l2++) {		
+							int v1_4_2 = l1 ^ y1[1];
+							int v1_4_4 = l2 ^ y1[3];
+							int v2_4_2 = l1 ^ y2[1];
+							int v2_4_4 = l2 ^ y2[3];
+								//System.out.println(v1_4_1+" "+v1_4_2+" "+v2_4_1+" "+v2_4_2);
+							int u1_4_2 = substitution(S_, v1_4_2);
+							int u1_4_4 = substitution(S_, v1_4_4);
+							int u2_4_2 = substitution(S_, v2_4_2);
+							int u2_4_4 = substitution(S_, v2_4_4);
+								//System.out.println(u1_4_1+" "+u1_4_2+" "+u2_4_1+" "+u2_4_2);
+							int w1 = u1_4_2 ^ u2_4_2;
+							int w2 = u1_4_4 ^ u2_4_4;
+								//System.out.println(w1+" "+w2);
+							if(w1 == 6 && w2 == 6)gamma[l1][l2]++;
+						}
+					}
+				}
+			}
+		}
+		int max =-1;
+		int[] maxkey=new int[2];
 		for(int l1=0; l1<16; l1++) {
 			for(int l2=0; l2<16; l2++) {	
-				alpha[l1][l2]=0;
+				//System.out.print(gamma[l1][l2]+" ");
+				if(gamma[l1][l2] > max) {maxkey[0]=l1; maxkey[1]=l2; max=gamma[l1][l2];}
 			}
-		}
-		for(int p=0; p<paare.length;p++) {
-			for(int q=0; q<paare.length;q++) {
-				int[] x = paare[p][0];
-				int[] y = paare[q][1];
-				for(int l1=0; l1<16; l1++) {
-					for(int l2=0; l2<16; l2++) {
-						//x in bin
-							String x_bin ="";
-							for(int i: x) {
-								String block_bin = String.valueOf(Integer.toBinaryString(i));
-								while(block_bin.length()<4) block_bin = "0" + block_bin;
-								x_bin+=block_bin;
-							}
-//							for(int i: x)System.out.print(i);
-//							System.out.println(" "+x_bin);
-						int[] v_4_2 = {l1 ^ y[1]};
-						int[] v_4_4 = {l2 ^ y[3]};
-						int u_4_2= substitution(S_, v_4_2)[0];
-						int u_4_4 = substitution(S_, v_4_4)[0];
-						//u_4_1 in bin
-							String u_4_2_bin ="";
-								String block_bin = String.valueOf(Integer.toBinaryString(u_4_2));
-								while(block_bin.length()<4) block_bin = "0" + block_bin;	
-								u_4_2_bin = block_bin;
-						//u_4_3 in bin
-							String u_4_4_bin ="";
-								block_bin = String.valueOf(Integer.toBinaryString(u_4_4));
-								while(block_bin.length()<4) block_bin = "0" + block_bin;
-								u_4_4_bin = block_bin;
-						
-						int x_5 = Character.digit(x_bin.charAt(4), 10);
-						int x_7 = Character.digit(x_bin.charAt(5), 10);
-						int x_8 = Character.digit(x_bin.charAt(7), 10);
-						
-						int u_4_6 = Character.digit(u_4_2_bin.charAt(1), 10);
-						int u_4_8 = Character.digit(u_4_2_bin.charAt(3), 10);
-						int u_4_14 = Character.digit(u_4_4_bin.charAt(1), 10);
-						int u_4_16 = Character.digit(u_4_4_bin.charAt(3), 10);
-
-						if((x_5 ^ x_7 ^ x_8 ^ u_4_6 ^ u_4_8 ^ u_4_14 ^ u_4_16) == 0) alpha[l1][l2]++;
-					}
-				}	
-			}
-		}
-		for(int p=0; p<16;p++) {
-			for(int q=0; q<16;q++) {
-				System.out.print(alpha[p][q]+" ");
-			}
-			System.out.println();
-		}
-		int max = -1;
-		int[] maxkey = new int[2];
-		for(int l1=0; l1<16; l1++) {
-			for(int l2=0; l2<16; l2++) {
-				beta[l1][l2] = Math.abs(alpha[l1][l2] - t/2);
-				if(beta[l1][l2] > max) {
-					max = beta[l1][l2];
-					maxkey[0]=l1; maxkey[1]=l2;
-				}
-			}
-		}
-		return maxkey;
-	}
-
-
-    /**
-     * linearattack mit folgender Modifikation: alpha wird nur durch neue Paare modifiziert und zuerueckgegeben
-     * @param paare
-     * @param t
-     * @param alpha
-     * @param startpos
-     * @return alpha
-     */
-	public static int[][] linearattack_mod(int[][][] paare, int t,int[][] alpha,int startpos) {
-		int[][] beta = new int[16][16];
-		int[] S_ = {15,3,2,6,1,9,5,11,0,14,8,13,4,7,10,12};
-		for(int p=startpos; p<paare.length;p++) {
-			for(int q=startpos; q<paare.length;q++) {
-				int[] x = paare[p][0];
-				int[] y = paare[q][1];
-				for(int l1=0; l1<15; l1++) {
-					for(int l2=0; l2<15; l2++) {
-						//x in bin
-						String x_bin = toBinString(x);
-						int[] v_4_1 = {l1 ^ y[0]};
-						int[] v_4_3 = {l2 ^ y[2]};
-						int[] u_4_1 = substitution(S_, v_4_1);
-						int[] u_4_3 = substitution(S_, v_4_3);
-						//u_4_1 in bin
-						String u_4_1_bin = toBinString(u_4_1);
-						//u_4_3 in bin
-						String u_4_3_bin = toBinString(u_4_3);
-						int x_16 = (int) Character.digit(x_bin.charAt(15), 10);
-						int u_4_1_1 = (int) Character.digit(u_4_1_bin.charAt(0), 10);
-						int u_4_3_9 = (int) Character.digit(u_4_3_bin.charAt(0), 10);
-
-						if((x_16 ^ u_4_1_1 ^ u_4_3_9) == 0) alpha[l1][l2]++;
-					}
-				}
-			}
+			//System.out.println();
 		}
 		//if(maxkey[0] == 13 && maxkey[1] == 3)System.out.println("[13][3]"+beta[13][3]+" maxkey:"+beta[maxkey[0]][maxkey[1]]);
-		return alpha;
-	}
-
-
-    /**
-     * rechnet implementiert den Algorithmus aus der Vorlesung mit S^-1 aus Uebung
-     * @param paare
-     * @param t
-     * @return
-     */
-    public static int[] linearattack(int[][][] paare, int t) {
-		int[][] alpha = new int[16][16];
-		int[][] beta = new int[16][16];
-		int[] S_ = {15,3,2,6,1,9,5,11,0,14,8,13,4,7,10,12};
-		for(int l1=0; l1<16; l1++) {
-			for(int l2=0; l2<16; l2++) {	
-				alpha[l1][l2]=0;
-			}
-		}
-
-		for(int p=0; p<paare.length;p++) {
-			for(int q=0; q<paare.length;q++) {
-				int[] x = paare[p][0];
-				int[] y = paare[q][1];
-				for(int l1=0; l1<15; l1++) {
-					for(int l2=0; l2<15; l2++) {
-						//x in bin
-							String x_bin ="";
-							for(int i: x) {
-								String block_bin = String.valueOf(Integer.toBinaryString(i));
-								while(block_bin.length()<4) block_bin = "0" + block_bin;
-								x_bin+=block_bin;
-							}
-//							for(int i: x)System.out.print(i);
-//							System.out.println(" "+x_bin);
-						int[] v_4_1 = {l1 ^ y[0]};
-						int[] v_4_3 = {l2 ^ y[2]};
-						int u_4_1 = substitution(S_, v_4_1)[0];
-						int u_4_3 = substitution(S_, v_4_3)[0];
-						//u_4_1 in bin
-							String u_4_1_bin ="";
-								String block_bin = String.valueOf(Integer.toBinaryString(u_4_1));
-								while(block_bin.length()<4) block_bin = "0" + block_bin;	
-								u_4_1_bin = block_bin;
-						//u_4_3 in bin
-							String u_4_3_bin ="";
-								block_bin = String.valueOf(Integer.toBinaryString(u_4_3));
-								while(block_bin.length()<4) block_bin = "0" + block_bin;
-								u_4_3_bin = block_bin;
-						
-						//System.out.println(x_bin+" "+u_4_1_bin+" "+u_4_3_bin);
-						int x_16 = Character.digit(x_bin.charAt(15), 10);
-						int u_4_1_1 = Character.digit(u_4_1_bin.charAt(0), 10);
-						int u_4_3_9 = Character.digit(u_4_3_bin.charAt(0), 10);
-						//System.out.println("BIT:" +x_16+" "+u_4_1_1+" "+u_4_3_9);
-
-						if((x_16 ^ u_4_1_1 ^ u_4_3_9) == 0) alpha[l1][l2]++;
-					}
-				}	
-			}
-			if(p%200==0) {
-				System.out.println("p ist bei:"+ p);
-			}
-		}
-//		for(int p=0; p<16;p++) {
-//			for(int q=0; q<16;q++) {
-//				System.out.print(alpha[p][q]+" ");
-//			}
-//			System.out.println();
-//		}
-		int max = -1;
-		int[] maxkey = new int[2];
-		for(int l1=0; l1<16; l1++) {
-			for(int l2=0; l2<16; l2++) {
-				beta[l1][l2] = Math.abs(alpha[l1][l2] - t/2);
-				if(beta[l1][l2] > max) {
-					max = beta[l1][l2];
-					maxkey[0]=l1; maxkey[1]=l2;
-				}
-			}
-		}
 		return maxkey;
 	}
-
+	
     /**
      * erweitert alte Paar-Menge(Menge von Klartext-Kryptotext-Paaren) um anz Paare
      * @param paar
@@ -362,7 +284,6 @@ public class SPN2
      * @return
      */
 	public static int[][][] newpaare(int[][][]paar ,int anz, int laenge,int startpos){
-
     	int anzahl=startpos+anz;
     	int[][][] paarmenge = new int[anzahl][2][laenge];
     	for (int i = 0; i <startpos ; i++) {
@@ -413,7 +334,7 @@ public class SPN2
     public static int[] verschluesselung(int[] x) {
     	int[] permutation= {0,4,8,12,1,5,9,13,2,6,10,14,3,7,11,15};
     	//int[] substitution = {14,4,13,1,2,15,11,8,3,10,6,12,5,9,0,7}; //VL
-   	    int[] substitution = {8,4,2,1,12,6,3,13,10,5,14,7,15,11,9,0}; //UE
+   	    int[] substitution = {14,2,1,3,13,9,0,6,15,4,5,10,8,12,7,11}; //UE
     	int[] key = {3,10,9,4,13,6,3,15};
     	int[][] roundkey = round_key(key, 5, 4);
    	
@@ -500,6 +421,10 @@ public class SPN2
         return tmpZahl;
     }
 
+    public static int substitution(int[] S, int x) {
+		return S[x];
+	}
+    
 	public static int[] substitution(int[] S, int[] x) {
 		int[] ergebnis = new int[x.length];
 		for(int pos=0; pos<x.length; pos++) {
@@ -525,4 +450,6 @@ public class SPN2
 		}
 		return rk;
 	}
+
+
 }
