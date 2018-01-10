@@ -1,3 +1,4 @@
+package chiffren;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -5,9 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.print.attribute.Size2DSyntax;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import de.danielnaber.jwordsplitter.*;
 
