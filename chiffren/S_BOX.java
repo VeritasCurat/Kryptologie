@@ -30,7 +30,7 @@ public class S_BOX {
 //			s_value.put(14,0);
 //			s_value.put(15, 7);
 		
-		//für Aufgabe 33a entkommentieren 
+		//fï¿½r Aufgabe 33a entkommentieren 
 		
 			s_value.put(0, 8);
 			s_value.put(1, 4);

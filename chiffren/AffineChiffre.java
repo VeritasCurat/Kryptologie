@@ -55,12 +55,12 @@ public class AffineChiffre {
 
 	private static int kongruenzgleichung(int a, int m, int b) {
 		if(a==b)return 1;
-		if(a != 0 && ggT(a,m) % b == 0 ) { //lösbar
+		if(a != 0 && ggT(a,m) % b == 0 ) { //lï¿½sbar
 			for(int i=0;i<a;i++) {
 				if(a*i % m == b)return i;
 			}
 		}
-		else {System.err.println("kongruenzgleichung nicht lösbar: "+a+"*x ="+ b+ "%"+m);System.exit(-1);}
+		else {System.err.println("kongruenzgleichung nicht lï¿½sbar: "+a+"*x ="+ b+ "%"+m);System.exit(-1);}
 		return -1;
 	}
 	

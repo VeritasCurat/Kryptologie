@@ -86,9 +86,9 @@ public static double[][] inverseMatrix(double[][] a){
 		BigDecimal[][] neu = new BigDecimal[backup.length][backup.length];
 		for(int i=0; i<neu.length;i++){neu[i][i]=BigDecimal.ONE;}
 		
-		//Gauß-Algorithmus
+		//Gauï¿½-Algorithmus
 		for(int n=0; n<backup.length; n++){
-			//Man wählt die erste Spalte von links, in der mindestens ein von Null verschiedener Wert steht.
+			//Man wï¿½hlt die erste Spalte von links, in der mindestens ein von Null verschiedener Wert steht.
 			int s;
 			s2:
 			for(s=n; s<backup[0].length; s++){
@@ -96,7 +96,7 @@ public static double[][] inverseMatrix(double[][] a){
 					if(backup[z][s] != BigDecimal.ZERO)break s2;
 				}
 			}
-			//Ist die oberste Zahl der gewählten Spalte eine Null, so vertauscht man die erste Zeile mit einer anderen Zeile, in der in dieser Spalte keine Null steht.
+			//Ist die oberste Zahl der gewï¿½hlten Spalte eine Null, so vertauscht man die erste Zeile mit einer anderen Zeile, in der in dieser Spalte keine Null steht.
 			if(backup[n][s] == BigDecimal.ZERO){
 				int z;
 				for(z=n; z<backup.length; z++){
@@ -105,11 +105,11 @@ public static double[][] inverseMatrix(double[][] a){
 				backup = tauscheZeile(backup, n, z);
 				neu = tauscheZeile(neu, n, z);
 			}
-			//Man dividiert die erste Zeile durch das nun oberste Element der gewählten Spalte.
+			//Man dividiert die erste Zeile durch das nun oberste Element der gewï¿½hlten Spalte.
 			BigDecimal skalar = (BigDecimal.ONE.divide(backup[n][s]));
 			backup = multpliziereSkalar(backup, skalar, n); 
 			neu = multpliziereSkalar(neu, skalar, n);
-			//Man subtrahiert entsprechende Vielfache der ersten Zeile von den darunterliegenden Zeilen mit dem Ziel, dass das erste Element jeder Zeile (außer der ersten) Null wird.
+			//Man subtrahiert entsprechende Vielfache der ersten Zeile von den darunterliegenden Zeilen mit dem Ziel, dass das erste Element jeder Zeile (auï¿½er der ersten) Null wird.
 			for(int z=n+1; z<a.length; z++){
 				skalar = backup[n][n].divide(backup[z][n]);
 				if(backup[z][n]== BigDecimal.ZERO || Double.isInfinite(skalar.doubleValue()))continue;
@@ -228,7 +228,7 @@ public static double[][] matrixmultiplikation(double[][] a, double[][] b){
    //Kontrolle: #Spalten(a) == #Zeilen(b)
 
    if(a[0].length == b.length){anz_summanden = a[0].length; spalten = b[0].length; zeilen = a.length;}
-   else System.err.println("Matrixgrößen unterschiedlich!");
+   else System.err.println("Matrixgrï¿½ï¿½en unterschiedlich!");
 
    double[][] rueckgabe = new double[zeilen][spalten];
 

@@ -1,5 +1,4 @@
 package chiffren;
-import java.io.IOException;
 
 public class AdditiveChiffre {
 	static char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
@@ -164,7 +163,7 @@ public class AdditiveChiffre {
 		
 		
 		if(kryptotext.length() >= 100) {
-			//finde den schlüssel
+			//finde den schlï¿½ssel
 			char hauf_kry = Buchstabenhaeufigkeiten_rang(haeufigkeitenBuchstaben(kryptotext))[0];
 			char hauf_eng = haeufigBuchstaben_en[0];
 			int k = (hauf_kry - hauf_eng +26) % 26;
