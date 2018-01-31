@@ -1,5 +1,6 @@
 package chiffren;
 
+
 public class AdditiveChiffre {
 	static char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 
