@@ -1,6 +1,6 @@
-package chiffren;
+package src;
 
-public class test {
+public class AES {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

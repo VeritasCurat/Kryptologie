@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.print.attribute.Size2DSyntax;
 
-import de.danielnaber.jwordsplitter.*;
-
 
 
 public class TextAnalyse {

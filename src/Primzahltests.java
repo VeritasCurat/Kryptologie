@@ -1,4 +1,4 @@
-package chiffren;
+package src;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -8,15 +8,17 @@ import java.util.Set;
 public class Primzahltests {
 
 	public static void main(String[] args) {
-	System.out.println("PFT: ");
-		ArrayList<Integer> PFT  = berechnePFT_n(221);
-		for(int i: PFT)System.out.println(i);
-	System.out.println("MRT: ");
-		ArrayList<Integer> MRT  = berechen_MRT(221);
-		for(int i: MRT)System.out.println(i);
-	System.out.println("J: ");
-		ArrayList<Integer> J  = J(221);
-		for(int i: J)System.out.println(i);
+		System.out.println(Primzahltests.HornerPot(1920, 19, 2773));
+
+//	System.out.println("PFT: ");
+//		ArrayList<Integer> PFT  = berechnePFT_n(221);
+//		for(int i: PFT)System.out.println(i);
+//	System.out.println("MRT: ");
+//		ArrayList<Integer> MRT  = berechen_MRT(221);
+//		for(int i: MRT)System.out.println(i);
+//	System.out.println("J: ");
+//		ArrayList<Integer> J  = J(221);
+//		for(int i: J)System.out.println(i);
 	}
 
 	//Hilfsfkt)
@@ -40,12 +42,15 @@ public class Primzahltests {
 	       return e;
 	    }
 
-	    //TODO: testn
 	    static int HornerPot(int a, int n, int m){
 		   int z =a;
-	       ArrayList<Integer> e = bin(a); 
-	       for(int i = e.size()-2; i>=0; i--){
-	       	 z = (z*z)* (int) Math.pow(a, e.get(i)) % m; 
+	       ArrayList<Integer> e = bin(n); 
+	       for(int i = 0; i<e.size(); i++){
+	    	   if(i==0) {z = ((int) Math.pow(a, e.get(i))) % m; continue;}
+	    	   int l = (int) Math.pow(a, e.get(i));
+	    	   z = ((int) (((z*z) % m)*l) % m); 
+	    	   while(z<0)z+=m;
+
 	       }
 	       return(z);
 	    }

@@ -1,5 +1,6 @@
 package src;
 
+import java.io.IOException;
 
 public class AdditiveChiffre {
 	static char[] alphabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();

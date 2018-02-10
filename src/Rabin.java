@@ -6,7 +6,9 @@ public class Rabin {
 
 	public static void main(String[] args) {
 		aufgabe_a();
-		Rabin2.encrypt(32767, 199*211);
+		
+		
+		Rabin2.encrypt(BigInteger.valueOf(32767), BigInteger.valueOf(199*211));
 	}
 	
 	

@@ -2,11 +2,8 @@
  * 			kleinede, 564838
  */
 
-import java.util.ArrayList;
-import java.util.HashMap;
+package src;
 
-import javax.sound.midi.Synthesizer;
-import javax.xml.bind.SchemaOutputResolver;
 
 public class SPN2
 {
