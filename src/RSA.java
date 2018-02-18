@@ -14,19 +14,20 @@ public class RSA {
 		
 		//BigInteger n = 9382619383;
 		
-		int[] ret = verfahrenDerDifferenzen(9382619383L); //Vorl.124711, p=401,q=311
-		System.out.println(ret[0]+ " " + ret[1]);
+//		int[] ret = verfahrenDerDifferenzen(9382619383L); //Vorl.124711, p=401,q=311
+//		System.out.println(ret[0]+ " " + ret[1]);
 		
-//		int[] ret2 = faktorisieren_phi_primitiv(4386607);
+	//	int[] ret2 = faktorisieren_phi_primitiv(4386607);
 //		System.out.println(ret2[0]+ " " + ret2[1]);
 
+		ausgabe(faktorisieren_primitiv(1212351251));
 		
-		
-		System.out.println("nicht so schön ...");
-		System.out.println("c) "+faktorisieren_primitiv(9382619383L));
-		System.out.println("d) "+faktorisieren_primitiv(4386607));
 	}
 	
+	public static void ausgabe(ArrayList<Integer> a) {
+		for(int k: a)System.out.print(k+" ");
+		System.out.println();
+	}
 
 	static ArrayList<Integer> faktorisieren_primitiv(long n) {
 		ArrayList<Integer> faktoren = new ArrayList<Integer>();
